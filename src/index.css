@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --color-accent: #0a84ff;
+  --color-accent-2: #5e5ce6;
+  --color-mint: #30d5c8;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  @apply min-h-dvh bg-[#f5f5f7] text-neutral-900 transition-colors duration-500 dark:bg-black dark:text-neutral-100;
+}
+
+/* Rotating light edge on the glass card */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.glass-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--angle), transparent 0 55%, var(--color-accent), var(--color-mint), transparent 85%);
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: edge-spin 7s linear infinite;
+  pointer-events: none;
+}
+@keyframes edge-spin {
+  to { --angle: 360deg; }
+}
+
+/* Smooth cross-fade when switching theme (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
